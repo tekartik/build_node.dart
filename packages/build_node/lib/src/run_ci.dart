@@ -52,20 +52,20 @@ List<String> filterDartDirs(List<String> dirs) => dirs.where((element) {
 
 /// Package run options
 class NodePackageRunCiOptions {
-  final bool? noNodeTest;
-  final bool? noVmTest;
-  final bool? noGet;
-  final bool? noFormat;
-  final bool? noAnalyze;
-  final bool? noNpmInstall;
+  final bool noNodeTest;
+  final bool noVmTest;
+  final bool noPubGet;
+  final bool noFormat;
+  final bool noAnalyze;
+  final bool noNpmInstall;
 
   NodePackageRunCiOptions(
-      {this.noNodeTest,
-      this.noVmTest,
-      this.noAnalyze,
-      this.noFormat,
-      this.noGet,
-      this.noNpmInstall});
+      {this.noNodeTest = false,
+      this.noVmTest = false,
+      this.noAnalyze = false,
+      this.noFormat = false,
+      this.noPubGet = false,
+      this.noNpmInstall = false});
 }
 
 /// Run basic tests on dart/flutter package
@@ -74,12 +74,13 @@ class NodePackageRunCiOptions {
 /// ```
 /// ```
 Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
+  options ??= NodePackageRunCiOptions();
   await packageRunCi(path,
       options: PackageRunCiOptions(
           noTest: true,
-          noPubGet: options?.noGet ?? false,
-          noAnalyze: options?.noAnalyze ?? false,
-          noFormat: options?.noFormat ?? false));
+          noPubGet: options.noPubGet,
+          noAnalyze: options.noAnalyze,
+          noFormat: options.noFormat));
   var shell = Shell(workingDirectory: path);
 
   var pubspecMap = await pathGetPubspecYamlMap(path);
@@ -91,32 +92,34 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
     return;
   }
 
-  var platforms = <String>[if (!(options?.noVmTest ?? false)) 'vm'];
+  if (Directory(join(path, 'test')).existsSync()) {
+    var platforms = <String>[if (!(options.noVmTest)) 'vm'];
 
-  if (!(options?.noNodeTest ?? false)) {
-    // Add node for standard run test
-    var isNode = pubspecYamlSupportsNode(pubspecMap);
-    if (isNode && isNodeSupported) {
-      platforms.add('node');
+    if (!(options.noNodeTest)) {
+      // Add node for standard run test
+      // var isNode = pubspecYamlSupportsNode(pubspecMap);
+      if (isNodeSupported) {
+        platforms.add('node');
 
-      if (!(options?.noNpmInstall ?? false)) {
-        await nodeModulesCheck(path);
-      }
-      if (!(options?.noGet ?? false)) {
-        // Workaround issue about complaining old pubspec on node...
-        // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
-        await shell.run('''
+        if (!(options.noNpmInstall)) {
+          await nodeModulesCheck(path);
+        }
+        if (!(options.noPubGet)) {
+          // Workaround issue about complaining old pubspec on node...
+          // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
+          await shell.run('''
           # Get dependencies
           dart pub get --offline
     ''');
+        }
       }
     }
-  }
 
-  if (platforms.isNotEmpty) {
-    await shell.run('''
+    if (platforms.isNotEmpty) {
+      await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
+    }
   }
 }
