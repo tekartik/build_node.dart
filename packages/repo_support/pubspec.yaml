@@ -13,3 +13,5 @@ dev_dependencies:
   test:
   dev_test:
   pedantic:
+  tekartik_build_node:
+    path: ../build_node
