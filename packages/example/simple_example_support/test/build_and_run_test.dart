@@ -8,8 +8,8 @@ void main() {
   group('node', () {
     test('build_and_run', () async {
       if (isNodeSupportedSync) {
-        await run.main();
         await build.main();
+        await run.main();
       }
     });
   });

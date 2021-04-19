@@ -32,7 +32,7 @@ Future nodeBuild({String directory = 'node'}) async {
 /// Build for node, adding preamble for generated js files.
 ///
 Future<void> nodePackageBuild(String path, {String directory = 'node'}) async {
-  await nodeCheck();
+  await nodePackageCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('''
 pub run build_runner build --output=build/ $directory
