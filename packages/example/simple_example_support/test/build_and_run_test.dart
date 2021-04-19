@@ -11,6 +11,6 @@ void main() {
         await build.main();
         await run.main();
       }
-    });
+    }, timeout: Timeout(Duration(minutes: 5)));
   });
 }
