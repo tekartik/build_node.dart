@@ -8,6 +8,7 @@ Future<void> main() async {
   for (var dir in [
     'build_node',
     'example/simple_example',
+    'example/simple_example_support',
   ]) {
     var path = join(topDir, dir);
     await packageRunCi(path);
