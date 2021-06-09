@@ -8,6 +8,7 @@ In `pubspec.yaml`, add the following `dev_dependencies`:
 dev_dependencies:
   # needed node dependencies
   build_runner:
+  build_web_compilers:
   tekartik_build_node:
     git:
       url: git://github.com/tekartik/build_node.dart
@@ -33,6 +34,13 @@ targets:
           compiler: dart2js
 ```
 
+In `analysis_options.yaml` add:
+
+```
+analyzer:
+  exclude:
+   - build/**
+```
 ## Usage
 
 Create your main entry point in `node\main.dart`
@@ -55,7 +63,7 @@ Future main() async {
 }
 ```
 
-## Build
+## Run
 
 Create `tool\run_node.dart`:
 

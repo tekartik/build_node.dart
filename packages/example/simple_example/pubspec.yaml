@@ -13,5 +13,6 @@ dev_dependencies:
   test: ^1.14.4
   # needed node dependencies
   build_runner:
+  build_web_compilers:
   tekartik_build_node:
     path: ../../build_node
