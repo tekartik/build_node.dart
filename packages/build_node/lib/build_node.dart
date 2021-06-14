@@ -4,4 +4,5 @@ export 'src/build_node.dart'
         nodePackageCheck,
         nodeBuild,
         nodePackageBuild,
-        nodePackageRunTest;
+        nodePackageRunTest,
+        nodeRunTest;
