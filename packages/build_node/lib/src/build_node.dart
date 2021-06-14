@@ -3,23 +3,22 @@ import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:node_preamble/preamble.dart';
 
+import 'node_support.dart';
+
 bool _checked = false;
 
+/// Local folder only
 Future nodeCheck() async {
   if (!_checked) {
     _checked = true;
-    if (!(File('build.yaml').existsSync())) {
-      stderr.writeln('Missing \'build.yaml\'');
-    }
+    await nodePackageCheck('.');
   }
 }
 
+/// Check a node package
 Future nodePackageCheck(String path) async {
-  if (!_checked) {
-    _checked = true;
-    if (!(File(join(path, 'build.yaml')).existsSync())) {
-      stderr.writeln('Missing \'build.yaml\'');
-    }
+  if (!(File(join(path, 'build.yaml')).existsSync())) {
+    stderr.writeln('Missing \'build.yaml\'');
   }
 }
 
@@ -27,6 +26,11 @@ Future nodePackageCheck(String path) async {
 ///
 Future nodeBuild({String directory = 'node'}) async {
   await nodePackageBuild('.', directory: directory);
+}
+
+/// Run local node tests
+Future nodeRunTest() async {
+  await nodePackageRunTest('.');
 }
 
 /// Build for node, adding preamble for generated js files.
@@ -51,4 +55,12 @@ pub run build_runner build --output=build/ $directory
 $content''');
     }
   }
+}
+
+/// Run node test on a given package
+Future nodePackageRunTest(String path) async {
+  await nodePackageCheck(path);
+  await nodeModulesCheck(path);
+  var shell = Shell(workingDirectory: path);
+  await shell.run('pub run test -p node');
 }
