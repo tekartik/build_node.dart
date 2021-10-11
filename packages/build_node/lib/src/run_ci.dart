@@ -84,44 +84,46 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
           noAnalyze: options.noAnalyze,
           noFormat: options.noFormat,
           noOverride: options.noOverride));
-  var shell = Shell(workingDirectory: path);
+  if (!options.noOverride) {
+    var shell = Shell(workingDirectory: path);
 
-  var pubspecMap = await pathGetPubspecYamlMap(path);
+    var pubspecMap = await pathGetPubspecYamlMap(path);
 
-  var sdkBoundaries = pubspecYamlGetSdkBoundaries(pubspecMap)!;
+    var sdkBoundaries = pubspecYamlGetSdkBoundaries(pubspecMap)!;
 
-  if (!sdkBoundaries.match(dartVersion)) {
-    stderr.writeln('Unsupported sdk boundaries for dart $dartVersion');
-    return;
-  }
+    if (!sdkBoundaries.match(dartVersion)) {
+      stderr.writeln('Unsupported sdk boundaries for dart $dartVersion');
+      return;
+    }
 
-  if (Directory(join(path, 'test')).existsSync()) {
-    var platforms = <String>[if (!(options.noVmTest)) 'vm'];
+    if (Directory(join(path, 'test')).existsSync()) {
+      var platforms = <String>[if (!(options.noVmTest)) 'vm'];
 
-    if (!(options.noNodeTest)) {
-      // Add node for standard run test
-      // var isNode = pubspecYamlSupportsNode(pubspecMap);
-      if (isNodeSupported) {
-        platforms.add('node');
+      if (!(options.noNodeTest)) {
+        // Add node for standard run test
+        // var isNode = pubspecYamlSupportsNode(pubspecMap);
+        if (isNodeSupported) {
+          platforms.add('node');
 
-        if (!(options.noNpmInstall)) {
-          await nodeModulesCheck(path);
-        }
-        if (!(options.noPubGet)) {
-          // Workaround issue about complaining old pubspec on node...
-          // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
-          await shell.run('''
+          if (!(options.noNpmInstall)) {
+            await nodeModulesCheck(path);
+          }
+          if (!(options.noPubGet)) {
+            // Workaround issue about complaining old pubspec on node...
+            // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
+            await shell.run('''
           # Get dependencies
           dart pub get --offline
     ''');
+          }
         }
-      }
 
-      if (platforms.isNotEmpty) {
-        await shell.run('''
+        if (platforms.isNotEmpty) {
+          await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
+        }
       }
     }
   }
