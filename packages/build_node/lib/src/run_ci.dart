@@ -58,6 +58,7 @@ class NodePackageRunCiOptions {
   final bool noFormat;
   final bool noAnalyze;
   final bool noNpmInstall;
+  final bool noOverride;
 
   NodePackageRunCiOptions(
       {this.noNodeTest = false,
@@ -65,7 +66,8 @@ class NodePackageRunCiOptions {
       this.noAnalyze = false,
       this.noFormat = false,
       this.noPubGet = false,
-      this.noNpmInstall = false});
+      this.noNpmInstall = false,
+      this.noOverride = false});
 }
 
 /// Run basic tests on dart/flutter package
@@ -80,7 +82,8 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
           noTest: true,
           noPubGet: options.noPubGet,
           noAnalyze: options.noAnalyze,
-          noFormat: options.noFormat));
+          noFormat: options.noFormat,
+          noOverride: options.noOverride));
   var shell = Shell(workingDirectory: path);
 
   var pubspecMap = await pathGetPubspecYamlMap(path);
