@@ -116,13 +116,13 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
     ''');
         }
       }
-    }
 
-    if (platforms.isNotEmpty) {
-      await shell.run('''
+      if (platforms.isNotEmpty) {
+        await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
+      }
     }
   }
 }
