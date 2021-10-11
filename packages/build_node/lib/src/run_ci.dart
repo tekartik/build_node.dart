@@ -70,6 +70,8 @@ class NodePackageRunCiOptions {
       this.noOverride = false});
 }
 
+final _runCiOverridePath = join('tool', 'run_ci_override.dart');
+
 /// Run basic tests on dart/flutter package
 ///
 /// Dart:
@@ -84,46 +86,50 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
           noAnalyze: options.noAnalyze,
           noFormat: options.noFormat,
           noOverride: options.noOverride));
-  if (!options.noOverride) {
-    var shell = Shell(workingDirectory: path);
 
-    var pubspecMap = await pathGetPubspecYamlMap(path);
+  // Single package only
+  if (!options.noOverride &&
+      File(join(path, _runCiOverridePath)).existsSync()) {
+    return;
+  }
+  var shell = Shell(workingDirectory: path);
 
-    var sdkBoundaries = pubspecYamlGetSdkBoundaries(pubspecMap)!;
+  var pubspecMap = await pathGetPubspecYamlMap(path);
 
-    if (!sdkBoundaries.match(dartVersion)) {
-      stderr.writeln('Unsupported sdk boundaries for dart $dartVersion');
-      return;
-    }
+  var sdkBoundaries = pubspecYamlGetSdkBoundaries(pubspecMap)!;
 
-    if (Directory(join(path, 'test')).existsSync()) {
-      var platforms = <String>[if (!(options.noVmTest)) 'vm'];
+  if (!sdkBoundaries.match(dartVersion)) {
+    stderr.writeln('Unsupported sdk boundaries for dart $dartVersion');
+    return;
+  }
 
-      if (!(options.noNodeTest)) {
-        // Add node for standard run test
-        // var isNode = pubspecYamlSupportsNode(pubspecMap);
-        if (isNodeSupported) {
-          platforms.add('node');
+  if (Directory(join(path, 'test')).existsSync()) {
+    var platforms = <String>[if (!(options.noVmTest)) 'vm'];
 
-          if (!(options.noNpmInstall)) {
-            await nodeModulesCheck(path);
-          }
-          if (!(options.noPubGet)) {
-            // Workaround issue about complaining old pubspec on node...
-            // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
-            await shell.run('''
+    if (!(options.noNodeTest)) {
+      // Add node for standard run test
+      // var isNode = pubspecYamlSupportsNode(pubspecMap);
+      if (isNodeSupported) {
+        platforms.add('node');
+
+        if (!(options.noNpmInstall)) {
+          await nodeModulesCheck(path);
+        }
+        if (!(options.noPubGet)) {
+          // Workaround issue about complaining old pubspec on node...
+          // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
+          await shell.run('''
           # Get dependencies
           dart pub get --offline
     ''');
-          }
         }
+      }
 
-        if (platforms.isNotEmpty) {
-          await shell.run('''
+      if (platforms.isNotEmpty) {
+        await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
-        }
       }
     }
   }
