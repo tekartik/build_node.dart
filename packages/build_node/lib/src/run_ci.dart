@@ -58,6 +58,7 @@ class NodePackageRunCiOptions {
   final bool noFormat;
   final bool noAnalyze;
   final bool noNpmInstall;
+  final bool noOverride;
 
   NodePackageRunCiOptions(
       {this.noNodeTest = false,
@@ -65,8 +66,11 @@ class NodePackageRunCiOptions {
       this.noAnalyze = false,
       this.noFormat = false,
       this.noPubGet = false,
-      this.noNpmInstall = false});
+      this.noNpmInstall = false,
+      this.noOverride = false});
 }
+
+final _runCiOverridePath = join('tool', 'run_ci_override.dart');
 
 /// Run basic tests on dart/flutter package
 ///
@@ -80,7 +84,14 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
           noTest: true,
           noPubGet: options.noPubGet,
           noAnalyze: options.noAnalyze,
-          noFormat: options.noFormat));
+          noFormat: options.noFormat,
+          noOverride: options.noOverride));
+
+  // Single package only
+  if (!options.noOverride &&
+      File(join(path, _runCiOverridePath)).existsSync()) {
+    return;
+  }
   var shell = Shell(workingDirectory: path);
 
   var pubspecMap = await pathGetPubspecYamlMap(path);
@@ -113,13 +124,13 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
     ''');
         }
       }
-    }
 
-    if (platforms.isNotEmpty) {
-      await shell.run('''
+      if (platforms.isNotEmpty) {
+        await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
+      }
     }
   }
 }
