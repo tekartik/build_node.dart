@@ -1,7 +1,8 @@
 import 'dart:io';
+
+import 'package:node_preamble/preamble.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
-import 'package:node_preamble/preamble.dart';
 
 import 'node_support.dart';
 
@@ -39,7 +40,7 @@ Future<void> nodePackageBuild(String path, {String directory = 'node'}) async {
   await nodePackageCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('''
-pub run build_runner build --output=build/ $directory
+dart pub run build_runner build --output=build/ $directory
 ''');
 
   var files = await Directory(join(path, 'build', directory))
@@ -62,5 +63,5 @@ Future nodePackageRunTest(String path) async {
   await nodePackageCheck(path);
   await nodeModulesCheck(path);
   var shell = Shell(workingDirectory: path);
-  await shell.run('pub run test -p node');
+  await shell.run('dart test -p node');
 }
