@@ -34,7 +34,7 @@ Future<List<String>> topLevelDir(String dir) async {
     if (event is Directory) {
       list.add(basename(event.path));
     }
-  }).asFuture();
+  }).asFuture<void>();
   return list;
 }
 
