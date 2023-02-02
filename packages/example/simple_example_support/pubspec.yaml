@@ -10,6 +10,7 @@ dependencies:
   process_run:
   dev_test:
 dev_dependencies:
+  lints:
   test: ^1.14.4
   # needed node dependencies
   build_runner:
