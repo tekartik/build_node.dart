@@ -40,7 +40,7 @@ Future<void> nodePackageBuild(String path, {String directory = 'node'}) async {
   await nodePackageCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('''
-dart pub run build_runner build --output=build/ $directory
+dart run build_runner build --release --output=build/ $directory
 ''');
 
   var files = await Directory(join(path, 'build', directory))
