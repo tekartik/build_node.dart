@@ -22,7 +22,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: ${{ matrix.dart }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '14'
       - run: dart --version
