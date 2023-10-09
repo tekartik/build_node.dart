@@ -1,0 +1,30 @@
+# Dependabot configuration file.
+# See https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+version: 2
+
+enable-beta-ecosystems: true
+updates:
+  - package-ecosystem: "pub"
+    directory: "packages/build_node"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "pub"
+    directory: "packages/example/simple_example"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "pub"
+    directory: "packages/example/simple_example_support"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "pub"
+    directory: "packages/repo_support"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
