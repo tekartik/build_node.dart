@@ -11,8 +11,8 @@ dependencies:
   build_runner:
   node_preamble:
   process_run:
-  dev_test:
+  dev_test: '>=0.16.3'
 
 dev_dependencies:
   test: '>=1.14.4'
-  lints:
+  lints: '>=3.0.0'
