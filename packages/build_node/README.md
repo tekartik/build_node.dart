@@ -13,7 +13,7 @@ dev_dependencies:
     git:
       url: https://github.com/tekartik/build_node.dart
       path: packages/build_node
-      ref: dart2_3
+      ref: dart3a
 ```
 
 Create `build.yaml` with at least:
