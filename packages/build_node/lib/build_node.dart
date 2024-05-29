@@ -3,6 +3,6 @@ export 'src/build_node.dart'
         nodeCheck,
         nodePackageCheck,
         nodeBuild,
-        nodePackageBuild,
+        nodePackageBuild, nodePackageWatch,nodePackageRun,
         nodePackageRunTest,
         nodeRunTest;

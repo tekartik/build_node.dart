@@ -10,4 +10,4 @@ targets:
         - node/**
         options:
           # enforce dart2js compiler
-          compiler: dart2js
+          # compiler: dart2js

@@ -36,11 +36,11 @@ Future nodeRunTest() async {
 
 /// Build for node, adding preamble for generated js files.
 ///
-Future<void> nodePackageBuild(String path, {String directory = 'node'}) async {
+Future<void> _nodePackageBuild(String path, {String directory = 'node', bool? debug, String builder  = 'build'}) async {
   await nodePackageCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('''
-dart run build_runner build --release --output=build/ $directory
+dart run build_runner $builder ${(debug ?? false) ? ' --no-release' : ' --release'} --output=build/ $directory  --delete-conflicting-outputs --define=build_web_compilers:entrypoint=compiler=dart2js
 ''');
 
   var files = await Directory(join(path, 'build', directory))
@@ -58,10 +58,36 @@ $content''');
   }
 }
 
+
+/// Build for node, adding preamble for generated js files.
+///
+Future<void> nodePackageBuild(String path, {String directory = 'node', bool? debug}) async {
+  await _nodePackageBuild(path, directory: directory, debug: debug);
+}
+
+/// Watch for node, adding preamble for generated js files.
+///
+Future<void> nodePackageWatch(String path, {String directory = 'node', bool? debug}) async {
+  await _nodePackageBuild(path, directory: directory, debug: debug, builder: 'watch');
+}
 /// Run node test on a given package
 Future nodePackageRunTest(String path) async {
   await nodePackageCheck(path);
   await nodeModulesCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('dart test -p node');
+}
+
+/// Run a node app.
+Future<void> nodePackageRun(String path, {String? app}) async {
+  app ??= () {
+    if (File(join(path, 'node', 'main.dart')).existsSync()) {
+      return 'node/main.dart';
+    }
+    if (File(join(path, 'bin', 'main.dart')).existsSync()) {
+      return 'bin/main.dart';
+    }
+  } ();
+  var shell = Shell(workingDirectory: path);
+  await shell.run('node ${join('build', '$app.js')}');
 }
