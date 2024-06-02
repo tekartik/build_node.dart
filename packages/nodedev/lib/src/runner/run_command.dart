@@ -1,7 +1,5 @@
-
 import 'package:args/command_runner.dart';
 import 'package:tekartik_build_node/build_node.dart';
-
 
 mixin RunCommandMixin<T> on Command<T> {
   void addRunArgs() {
@@ -10,9 +8,9 @@ mixin RunCommandMixin<T> on Command<T> {
 
   String? get argApp => argResults!['app'] as String?;
 }
+
 /// Command to execute pub run build_runner build.
 class RunCommand extends Command<int> with RunCommandMixin<int> {
-
   RunCommand() {
     addRunArgs();
   }

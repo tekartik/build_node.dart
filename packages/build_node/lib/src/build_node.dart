@@ -36,7 +36,8 @@ Future nodeRunTest() async {
 
 /// Build for node, adding preamble for generated js files.
 ///
-Future<void> _nodePackageBuild(String path, {String directory = 'node', bool? debug, String builder  = 'build'}) async {
+Future<void> _nodePackageBuild(String path,
+    {String directory = 'node', bool? debug, String builder = 'build'}) async {
   await nodePackageCheck(path);
   var shell = Shell(workingDirectory: path);
   await shell.run('''
@@ -58,18 +59,21 @@ $content''');
   }
 }
 
-
 /// Build for node, adding preamble for generated js files.
 ///
-Future<void> nodePackageBuild(String path, {String directory = 'node', bool? debug}) async {
+Future<void> nodePackageBuild(String path,
+    {String directory = 'node', bool? debug}) async {
   await _nodePackageBuild(path, directory: directory, debug: debug);
 }
 
 /// Watch for node, adding preamble for generated js files.
 ///
-Future<void> nodePackageWatch(String path, {String directory = 'node', bool? debug}) async {
-  await _nodePackageBuild(path, directory: directory, debug: debug, builder: 'watch');
+Future<void> nodePackageWatch(String path,
+    {String directory = 'node', bool? debug}) async {
+  await _nodePackageBuild(path,
+      directory: directory, debug: debug, builder: 'watch');
 }
+
 /// Run node test on a given package
 Future nodePackageRunTest(String path) async {
   await nodePackageCheck(path);
@@ -87,7 +91,7 @@ Future<void> nodePackageRun(String path, {String? app}) async {
     if (File(join(path, 'bin', 'main.dart')).existsSync()) {
       return 'bin/main.dart';
     }
-  } ();
+  }();
   var shell = Shell(workingDirectory: path);
   await shell.run('node ${join('build', '$app.js')}');
 }

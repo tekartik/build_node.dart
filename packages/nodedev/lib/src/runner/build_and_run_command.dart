@@ -16,7 +16,8 @@ class BuildAndRunCommand extends Command<int>
   final name = 'bar';
 
   @override
-  final description = 'Build and run node app. (node/main.dart or bin/main.dart)';
+  final description =
+      'Build and run node app. (node/main.dart or bin/main.dart)';
 
   @override
   Future<int> run() async {

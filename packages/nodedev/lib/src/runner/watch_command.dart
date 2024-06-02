@@ -1,11 +1,8 @@
-
 import 'package:args/command_runner.dart';
 import 'package:tekartik_build_node/build_node.dart';
 
-
 /// Command to execute pub run build_runner build.
 class WatchCommand extends Command<int> {
-
   @override
   final name = 'watch';
 
