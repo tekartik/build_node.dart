@@ -75,11 +75,12 @@ Future<void> nodePackageWatch(String path,
 }
 
 /// Run node test on a given package
-Future nodePackageRunTest(String path) async {
+Future nodePackageRunTest(String path, {List<String>? testFiles}) async {
   await nodePackageCheck(path);
   await nodeModulesCheck(path);
   var shell = Shell(workingDirectory: path);
-  await shell.run('dart test -p node');
+  await shell.run(
+      'dart test -p node${testFiles != null ? ' ${testFiles.join(' ')}' : ''}');
 }
 
 /// Run a node app.
