@@ -1,4 +1,4 @@
-import 'package:dev_test/build_support.dart';
+import 'package:dev_build/build_support.dart';
 import 'package:simple_example_support/build_node.dart' as build;
 import 'package:simple_example_support/run_node.dart' as run;
 import 'package:simple_example_support/test_node.dart';

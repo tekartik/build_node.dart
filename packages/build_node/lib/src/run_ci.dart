@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dev_test/package.dart';
+import 'package:dev_build/package.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell_run.dart';
 import 'package:tekartik_build_node/src/node_support.dart';

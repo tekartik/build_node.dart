@@ -12,6 +12,6 @@ dev_dependencies:
   pub_semver:
   process_run: '>=0.10.3'
   test:
-  dev_test:
+  dev_build:
   tekartik_build_node:
     path: ../build_node
