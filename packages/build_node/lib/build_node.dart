@@ -7,4 +7,5 @@ export 'src/build_node.dart'
         nodePackageWatch,
         nodePackageRun,
         nodePackageRunTest,
-        nodeRunTest;
+        nodeRunTest,
+        nodePackageCompileJs;
