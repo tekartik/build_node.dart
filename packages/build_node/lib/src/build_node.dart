@@ -63,11 +63,12 @@ var _minifiedPreamble = getPreamble(minified: true);
 
 /// Add preamble to generated js files
 Future<void> _addNodePreamble(String path) async {
-  var content = await File(path).readAsString();
+  var file = File(path);
+  var content = await file.readAsString();
   if (!content.startsWith(_minifiedPreamble)) {
-    await File(path).writeAsString('''$_minifiedPreamble
-$content''');
-    var size = File(path).statSync().size;
+    await file.writeAsString('''$_minifiedPreamble
+$content''', flush: true);
+    var size = file.statSync().size;
     stdout.writeln('Compiled $path $size bytes');
   }
 }
@@ -95,7 +96,7 @@ Future<void> _nodePackageCompileJs(
       ' --output ${shellArgument(output)} ${shellArgument(input)}'
       ' -O$optimizationLevel'
       '${debug ?? false ? ' --enable-asserts' : ''}');
-  await _addNodePreamble(output);
+  await _addNodePreamble(normalize(join(path, output)));
 }
 
 /// Build for node, adding preamble for generated js files.
