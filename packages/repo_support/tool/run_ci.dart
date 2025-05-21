@@ -14,9 +14,7 @@ Future<void> main() async {
     await packageRunCi(path);
   }
 
-  for (var dir in [
-    'example/simple_example',
-  ]) {
+  for (var dir in ['example/simple_example']) {
     var path = join(topDir, dir);
     await nodePackageRunCi(path);
   }

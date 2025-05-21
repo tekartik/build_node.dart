@@ -5,8 +5,12 @@ mixin BuildCommandMixin<T> on Command<T> {
   String get globalAppPath => globalResults!['path'] as String;
 
   void addBuildArgs() {
-    argParser.addFlag('debug',
-        abbr: 'd', help: 'Debug mode', defaultsTo: false);
+    argParser.addFlag(
+      'debug',
+      abbr: 'd',
+      help: 'Debug mode',
+      defaultsTo: false,
+    );
   }
 
   bool get argDebug => argResults!['debug'] as bool;

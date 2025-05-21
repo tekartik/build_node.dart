@@ -40,7 +40,8 @@ Future<List<String>> topLevelDir(String dir) async {
 
 List<String> _forbiddenDirs = ['node_modules', '.dart_tool', 'build'];
 
-List<String> filterDartDirs(List<String> dirs) => dirs.where((element) {
+List<String> filterDartDirs(List<String> dirs) => dirs
+    .where((element) {
       if (element.startsWith('.')) {
         return false;
       }
@@ -48,7 +49,8 @@ List<String> filterDartDirs(List<String> dirs) => dirs.where((element) {
         return false;
       }
       return true;
-    }).toList(growable: false);
+    })
+    .toList(growable: false);
 
 /// Package run options
 class NodePackageRunCiOptions {
@@ -60,14 +62,15 @@ class NodePackageRunCiOptions {
   final bool noNpmInstall;
   final bool noOverride;
 
-  NodePackageRunCiOptions(
-      {this.noNodeTest = false,
-      this.noVmTest = false,
-      this.noAnalyze = false,
-      this.noFormat = false,
-      this.noPubGet = false,
-      this.noNpmInstall = false,
-      this.noOverride = false});
+  NodePackageRunCiOptions({
+    this.noNodeTest = false,
+    this.noVmTest = false,
+    this.noAnalyze = false,
+    this.noFormat = false,
+    this.noPubGet = false,
+    this.noNpmInstall = false,
+    this.noOverride = false,
+  });
 }
 
 final _runCiOverridePath = join('tool', 'run_ci_override.dart');
@@ -79,13 +82,16 @@ final _runCiOverridePath = join('tool', 'run_ci_override.dart');
 /// ```
 Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
   options ??= NodePackageRunCiOptions();
-  await packageRunCi(path,
-      options: PackageRunCiOptions(
-          noTest: true,
-          noPubGet: options.noPubGet,
-          noAnalyze: options.noAnalyze,
-          noFormat: options.noFormat,
-          noOverride: options.noOverride));
+  await packageRunCi(
+    path,
+    options: PackageRunCiOptions(
+      noTest: true,
+      noPubGet: options.noPubGet,
+      noAnalyze: options.noAnalyze,
+      noFormat: options.noFormat,
+      noOverride: options.noOverride,
+    ),
+  );
 
   // Single package only
   if (!options.noOverride &&

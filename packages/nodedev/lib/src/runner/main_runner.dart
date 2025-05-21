@@ -17,10 +17,16 @@ Future<int> run(List<String> args) async => (await MainRunner().run(args))!;
 
 class MainRunner extends CommandRunner<int> {
   MainRunner() : super(appName, 'A tool to develop Dart node projects.') {
-    argParser.addFlag('version',
-        negatable: false, help: 'Prints the version of nodedev.');
-    argParser.addOption(pathOptions,
-        help: 'Path to the package.', defaultsTo: '.');
+    argParser.addFlag(
+      'version',
+      negatable: false,
+      help: 'Prints the version of nodedev.',
+    );
+    argParser.addOption(
+      pathOptions,
+      help: 'Path to the package.',
+      defaultsTo: '.',
+    );
 
     addCommand(BuildCommand());
     addCommand(WatchCommand());

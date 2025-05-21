@@ -9,7 +9,9 @@ Future main() async {
 }
 
 Future build() async {
-  await packageRunCi(packageTop,
-      options: PackageRunCiOptions(pubGetOnly: true));
+  await packageRunCi(
+    packageTop,
+    options: PackageRunCiOptions(pubGetOnly: true),
+  );
   await nodePackageBuild(packageTop);
 }
