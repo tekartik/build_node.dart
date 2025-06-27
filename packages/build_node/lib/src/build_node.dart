@@ -54,10 +54,9 @@ dart run build_runner $builder ${(debug ?? false) ? ' --no-release' : ' --releas
   // --multi-root-scheme=org-dartlang-app
   // --multi-root=/tmp/scratch_spaceZPOZYI/
   // -obin/main.dart.js org-dartlang-app:///bin/main.dart
-  var files =
-      await Directory(
-        join(path, 'build', directory),
-      ).list().where((event) => event.path.endsWith('dart.js')).toList();
+  var files = await Directory(
+    join(path, 'build', directory),
+  ).list().where((event) => event.path.endsWith('dart.js')).toList();
   for (var file in files) {
     await _addNodePreamble(file.path);
   }
