@@ -10,5 +10,4 @@ dependencies:
     git:
       url: https://github.com/tekartik/build_node.dart
       path: packages/nodedev
-      ref: dart3a
 ```
