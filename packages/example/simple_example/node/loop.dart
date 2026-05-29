@@ -3,8 +3,8 @@ import 'package:tekartik_common_utils/env_utils.dart';
 
 Future<void> main() async {
   while (true) {
-    print('Hello world 93e');
+    // ignore: avoid_print
     print('isDebug: $isDebug');
-    await Future.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
   }
 }
