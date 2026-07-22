@@ -24,7 +24,6 @@ Future nodePackageCheck(String path) async {
 }
 
 /// Build for node, adding preamble for generated js files.
-///
 Future nodeBuild({String directory = 'node'}) async {
   await nodePackageBuild('.', directory: directory);
 }
@@ -35,7 +34,6 @@ Future nodeRunTest() async {
 }
 
 /// Build for node, adding preamble for generated js files.
-///
 Future<void> _nodePackageBuild(
   String path, {
   String directory = 'node',
@@ -105,7 +103,6 @@ Future<void> _nodePackageCompileJs(
 }
 
 /// Build for node, adding preamble for generated js files.
-///
 Future<void> nodePackageBuild(
   String path, {
   String directory = 'node',
@@ -136,7 +133,6 @@ Future<void> nodePackageCompileJs(
 }
 
 /// Watch for node, adding preamble for generated js files.
-///
 Future<void> nodePackageWatch(
   String path, {
   String directory = 'node',
