@@ -5,6 +5,9 @@ import 'package:args/command_runner.dart';
 import 'package:tekartik_nodedev/src/constant.dart';
 import 'package:tekartik_nodedev/src/runner/build_and_run_command.dart';
 import 'package:tekartik_nodedev/src/runner/build_command.dart';
+import 'package:tekartik_nodedev/src/runner/npm_install_command.dart';
+import 'package:tekartik_nodedev/src/runner/npm_list_path_command.dart';
+import 'package:tekartik_nodedev/src/runner/npm_update_latest_command.dart';
 import 'package:tekartik_nodedev/src/runner/run_command.dart';
 import 'package:tekartik_nodedev/src/runner/watch_command.dart';
 import 'package:tekartik_nodedev/src/version.dart';
@@ -32,6 +35,9 @@ class MainRunner extends CommandRunner<int> {
     addCommand(WatchCommand());
     addCommand(RunCommand());
     addCommand(BuildAndRunCommand());
+    addCommand(NpmInstallCommand());
+    addCommand(NpmListPathCommand());
+    addCommand(NpmUpdateLatestCommand());
   }
 
   @override

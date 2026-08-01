@@ -27,3 +27,4 @@ doc/api/
 
 .*
 !.gitignore
+/pubspec_overrides.yaml
