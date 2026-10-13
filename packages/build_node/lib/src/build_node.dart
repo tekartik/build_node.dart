@@ -92,7 +92,7 @@ Future<void> _nodePackageCompileJs(
   var shell = Shell(workingDirectory: path);
 
   optimizationLevel ??= (debug ?? false) ? 0 : 2;
-  await Directory(dirname(output)).create(recursive: true);
+  await Directory(join(path, dirname(output))).create(recursive: true);
   await shell.run(
     'dart compile js'
     ' --output ${shellArgument(output)} ${shellArgument(input)}'

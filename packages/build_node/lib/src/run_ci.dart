@@ -110,33 +110,42 @@ Future nodePackageRunCi(String path, [NodePackageRunCiOptions? options]) async {
   }
 
   if (Directory(join(path, 'test')).existsSync()) {
-    var platforms = <String>[if (!(options.noVmTest)) 'vm'];
+    var platforms = nodePackageRunCiTestPlatforms(
+      options,
+      nodeSupported: isNodeSupported,
+    );
 
-    if (!(options.noNodeTest)) {
-      // Add node for standard run test
-      // var isNode = pubspecYamlSupportsNode(pubspecMap);
-      if (isNodeSupported) {
-        platforms.add('node');
-
-        if (!(options.noNpmInstall)) {
-          await nodeModulesCheck(path);
-        }
-        if (!(options.noPubGet)) {
-          // Workaround issue about complaining old pubspec on node...
-          // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
-          await shell.run('''
+    if (platforms.contains('node')) {
+      if (!(options.noNpmInstall)) {
+        await nodeModulesCheck(path);
+      }
+      if (!(options.noPubGet)) {
+        // Workaround issue about complaining old pubspec on node...
+        // https://travis-ci.org/github/tekartik/aliyun.dart/jobs/724680004
+        await shell.run('''
           # Get dependencies
           dart pub get --offline
     ''');
-        }
       }
+    }
 
-      if (platforms.isNotEmpty) {
-        await shell.run('''
+    if (platforms.isNotEmpty) {
+      await shell.run('''
     # Test
     dart test -p ${platforms.join(',')}
     ''');
-      }
     }
   }
 }
+
+/// The `dart test` platforms run by [nodePackageRunCi] (not exported).
+///
+/// vm unless [NodePackageRunCiOptions.noVmTest], node unless
+/// [NodePackageRunCiOptions.noNodeTest] or node is not installed.
+List<String> nodePackageRunCiTestPlatforms(
+  NodePackageRunCiOptions options, {
+  required bool nodeSupported,
+}) => [
+  if (!options.noVmTest) 'vm',
+  if (!options.noNodeTest && nodeSupported) 'node',
+];
