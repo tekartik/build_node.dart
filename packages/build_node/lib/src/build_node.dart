@@ -62,12 +62,31 @@ dart run build_runner $builder ${(debug ?? false) ? ' --no-release' : ' --releas
 
 var _minifiedPreamble = getPreamble(minified: true);
 
+/// Gives the node preamble `self` its own `crypto`.
+///
+/// The preamble makes `self` an `Object.create(globalThis)` and dart2js
+/// `Random.secure()` reads `self.crypto`, which node rejects (ERR_INVALID_THIS:
+/// the `crypto` getter needs the global object as `this`).
+/// mbullington/node_preamble.dart#14.
+const _selfCryptoFix =
+    'if(self!==globalThis&&typeof globalThis.crypto!=="undefined")'
+    '{Object.defineProperty(self,"crypto",{get:function(){'
+    'return globalThis.crypto},configurable:true,enumerable:true})}';
+
+/// The preamble added to the generated js files.
+final _nodePreamble = '$_minifiedPreamble\n$_selfCryptoFix';
+
 /// Add preamble to generated js files
 Future<void> _addNodePreamble(String path) async {
   var file = File(path);
   var content = await file.readAsString();
-  if (!content.startsWith(_minifiedPreamble)) {
-    await file.writeAsString('''$_minifiedPreamble
+  if (!content.startsWith(_nodePreamble)) {
+    // Built before the crypto fix, the old preamble would undo it.
+    var oldPreamble = '$_minifiedPreamble\n';
+    if (content.startsWith(oldPreamble)) {
+      content = content.substring(oldPreamble.length);
+    }
+    await file.writeAsString('''$_nodePreamble
 $content''', flush: true);
     var size = file.statSync().size;
     stdout.writeln('Compiled $path $size bytes');
