@@ -151,7 +151,11 @@ Future<void> nodePackageCompileJs(
   );
 }
 
-/// Watch for node, adding preamble for generated js files.
+/// Runs `build_runner watch` for node.
+///
+/// The node preamble is only added when the watcher exits: the js rebuilt
+/// while watching has none, compile with [nodePackageCompileJs] or
+/// [nodePackageBuild] before running it with node.
 Future<void> nodePackageWatch(
   String path, {
   String directory = 'node',

@@ -70,7 +70,10 @@ be run with `node`.
     `optimizationLevel` is 0 to 4 (default 2, or 0 with `debug: true`, which
     also passes `--enable-asserts`).
 * `nodePackageWatch(path, {directory, debug})` is `nodePackageBuild` with
-  `build_runner watch` — keep it running while editing.
+  `build_runner watch`, but the preamble step only runs when the watcher
+  exits: the js rebuilt while watching has no preamble (a known bug). Run
+  `nodePackageCompileJs` or `nodePackageBuild` before running the output
+  with node.
 * `nodePackageRun(path, {String? app, String? jsFile})` runs
   `node <file>`: `jsFile` as is, or `build/$app.js` where `app` defaults to
   `node/main.dart` if it exists, else `bin/main.dart`, else it throws an
@@ -88,8 +91,10 @@ be run with `node`.
   so the exit code is non zero.
 * The generated js targets node, not the browser: `dart:io` is not available,
   use `package:node_interop`-style bindings (or the tekartik node packages),
-  and keep the preamble — running a raw dart2js output with `node` fails
-  without it.
+  and keep the preamble — a raw dart2js output fails on `node` at its first
+  timer (`self` is undefined). The preamble added also gives `self` a
+  `crypto`, so `Random.secure()` works on node 19 and later (a global
+  `crypto`).
 
 ## Examples
 
@@ -158,7 +163,8 @@ Future<void> main() async {
 * No `build.yaml` (or one that does not `generate_for: node/**`): the build
   prints a warning and no `.dart.js` is produced.
 * Running the dart2js output directly without the preamble step (i.e. calling
-  `dart compile js` by hand instead of `nodePackageCompileJs`).
+  `dart compile js` by hand instead of `nodePackageCompileJs`), or the
+  output of `nodePackageWatch`.
 * Calling `nodePackageRun` before building, or on a package whose entry point
   is neither `node/main.dart` nor `bin/main.dart` without passing `app`/
   `jsFile`.
