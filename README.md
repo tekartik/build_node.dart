@@ -2,4 +2,7 @@
 
 Build utils for node on dart
 
-See: [tekartik_build_node](packages/build_node)
+* [tekartik_build_node](packages/build_node): compile, run and test Dart on
+  node.js from a `tool/` script.
+* [tekartik_nodedev](packages/nodedev): `nodedev`, the same as a command line
+  tool.
